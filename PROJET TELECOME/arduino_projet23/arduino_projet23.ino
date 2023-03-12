@@ -30,18 +30,35 @@ void setup() {
     Serial.begin(9600);
     SPI.begin();
     rfid.PCD_Init();
+    Serial2.begin(9600);
 
 }
 int cp=0;
 int ccp=0;
 void loop() {
   ///////////////////test 555//////////
-  if (Serial2.available() > 0) {
-    String message = Serial2.readString();
-   valid();
-    Serial.println(message);
-  }
+  // if (Serial2.available() > 0) {
+  //   String message = Serial2.readString();
+  //  //valid();
+  //   Serial.println(message);
+  //   if(Serial2.readString() == "ABCD123"){
+  //     Serial.print("valid");
+  //   }
+  // }
+if (Serial2.available() > 0) {
+  String message = Serial2.readString();
+  Serial.println(message);
+ // message.trim();
+   message.trim();
+  if (message.equals("ABCD123")) {
+        Serial.println("valid");
 
+       valid();   
+
+       
+delay(10000);
+  }
+}
 /////////////////////// code module hc05 blueuthoot /////////
  if (hc05.available() > 0) {
     String receivedValue = hc05.readString();
@@ -51,6 +68,7 @@ void loop() {
        valid();
     } else {
       Serial.println("Error");
+      Serial.print(receivedValue);
         err();
     }
   }

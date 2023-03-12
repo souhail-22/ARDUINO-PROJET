@@ -8,6 +8,7 @@
 #include "fr_forward.h"
 #include "fr_flash.h"
 ////////////////////////////
+#include <HardwareSerial.h>
 
 
 ////////////////////////////
@@ -23,8 +24,8 @@
 
 #include <ESP32Servo.h>
 Servo s1;
-const char* ssid = "wsr";
-const char* password = "sh123321";
+const char* ssid = "netis";
+const char* password = "password@souhail5";
 
 #define ENROLL_CONFIRM_TIMES 5
 #define FACE_ID_SAVE_NUMBER 7
@@ -43,7 +44,7 @@ camera_fb_t * fb = NULL;
 long current_millis;
 long last_detected_millis = 0;
 
-// #define relay_pin 2 // pin 12 can also be used
+ #define relay_pin 2 // pin 12 can also be used
 unsigned long door_opened_millis = 0;
 long interval = 5000;           // open lock for ... milliseconds
 bool face_recognised = false;
@@ -106,16 +107,18 @@ httpd_resp_value st_name;
 void setup() {
 
   
-  
 
 
-  Serial.begin(115200);
+  Serial.begin(9600);
+   //Serial.begin(115200);
   Serial.setDebugOutput(true);
-  Serial.println();
+  // Serial.println();
+    
+     //s1.attach(relay_pin);
 
   // digitalWrite(relay_pin, LOW);
   // pinMode(relay_pin, OUTPUT);
-  //s1.attach(2);
+  
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -180,7 +183,8 @@ void setup() {
   app_httpserver_init();
   app_facenet_main();
   socket_server.listen(82);
-
+  ////////////////////////////
+  /////////////////////////
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
@@ -282,28 +286,23 @@ void ppn(){
     s1.write(0);
 
 }
+
 void open_door(WebsocketsClient &client) {
 
 
-  // String message = "Hello Arduino";
-  // Serial2.print(message);
-  // delay(1000); 
-
-
-    // s1.write(90);
-    // delay(7000);
-    // s1.write(0);
 
   
- 
-
-
-  // if (s1.write(0)) {
-
+      // Définir le message à envoyer
+                
   //   digitalWrite(relay_pin, HIGH); //close (energise) relay so door unlocks
-  //   Serial.println("Door Unlocked");
-  //   client.send("door_open");
-  //   door_opened_millis = millis(); // time relay closed and door opened
+    //  Serial.println(message);
+    //  delay(5000);
+     //Serial.println("Door Unlocked");
+     client.send("door_open");
+     door_opened_millis = millis(); // time relay closed and door opened
+   
+    
+   
    }
 //}
 //  s1.write(90);
@@ -380,15 +379,17 @@ void loop() {
             {     
               char recognised_message[64];
               sprintf(recognised_message, "DOOR OPEN FOR %s", f->id_name);
-            
-              open_door(client);
+                String message = "ABCD123";
+                  Serial.println(message);
+                //     delay(5000);
+               //open_door(client);
+              
               // s1.write(90);
               // delay(7000);
               // s1.write(0);
-              client.send(recognised_message);
+             // client.send(recognised_message);
               
-              // String message = "Hello from ESP32-CAM!";
-              //  Serial.print(message);
+              
                 
             }
             else
