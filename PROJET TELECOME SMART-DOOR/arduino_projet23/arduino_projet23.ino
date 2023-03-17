@@ -14,19 +14,19 @@ Servo s1;
 #include <HardwareSerial.h>
 SoftwareSerial  Serial2(2,3);
 //HardwareSerial  Serial2(3);
-SoftwareSerial hc05(0, 1);
+//SoftwareSerial hc05(0,1);
 MFRC522 rfid(10,9);
 //////////////////////////////////variable  mot de pass et id valid pour rfid //////////
 String my_id ="6A A9 2A B4";
-String localValue = "ABCD123";
+String localValue = "ABCD12345";
 ////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
 
   ////////////////////////////
   Serial2.begin(9600);
   ////////////////////////////
-    s1.attach(5);
-    hc05.begin(9600); 
+    s1.attach(6);
+    //hc05.begin(9600); 
     Serial.begin(9600);
     SPI.begin();
     rfid.PCD_Init();
@@ -60,8 +60,8 @@ delay(10000);
   }
 }
 /////////////////////// code module hc05 blueuthoot /////////
- if (hc05.available() > 0) {
-    String receivedValue = hc05.readString();
+ if (Serial.available() > 0) {
+    String receivedValue = Serial.readString();
 
     if (receivedValue == localValue) {
       Serial.println("Valid");
@@ -140,7 +140,7 @@ return id;
  void valid(){
    tone(8,1200,200);
    s1.write(90);
-   delay(7000);
+   delay(10000);
    s1.write(0);
            //delay(3330);
            //tone(8,1200,200);
